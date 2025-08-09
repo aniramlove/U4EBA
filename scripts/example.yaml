@@ -1,0 +1,22 @@
+# Example SikuliLite script
+# Adjust image names and steps to your desktop.
+
+defaults:
+  threshold: 0.9
+  scale_min: 1.0
+  scale_max: 1.0
+  num_scales: 10
+  interval: 0.5
+
+steps:
+  - wait_for:
+      image: ok_button.png
+      timeout: 10
+  - click:
+      image: ok_button.png
+  - type_text:
+      text: "Привет! Это автонабор."
+      interval: 0.03
+  - hotkey:
+      keys: ["ctrl", "s"]
+  - sleep: 1.0

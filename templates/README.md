@@ -1,0 +1,1 @@
+Place your UI snapshot images here (e.g., ok_button.png). Use your OS screenshot tool and crop tightly around the target element.
