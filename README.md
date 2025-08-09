@@ -1,26 +1,53 @@
-# TACT template project
+# SikuliLite (Python)
 
-This project has ready to use TACT compiler, typescript + jest with [tact-emulator](https://github.com/tact-lang/tact-emulator), example how to do tests.
+A lightweight, scriptable desktop automation tool inspired by SikuliX. It performs actions based on image matching: find an image on screen, click/type/hotkey, wait, and more.
 
+## Features
+- Image-based matching using OpenCV (multi-scale search)
+- Mouse/keyboard automation with `pynput`
+- Screen capture via `mss`
+- YAML scripts to define flows
+- Optional debug visualization and confidence logging
+
+## Install
 ```bash
-yarn test # To test contract
-yarn build # To build contract
-yarn deploy # To deploy contract
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 ```
-## Deployment
 
-To deploy contract you should:
+## Run
+```bash
+python -m sikulite run scripts/example.yaml --templates templates --debug
+```
 
-1) Specify `contract.tact` that will be used as entry point of your contract
-2) Configure `contract.deploy.ts` according to your `contract.tact` to generate a deployment link. In particular, it is necessary to correctly call the Init() function from the contract.
+- Put UI snapshots under `templates/` (e.g., `ok_button.png`).
+- Edit `scripts/example.yaml` to point to your images and actions.
 
-If you renamed `contract.tact` to something else, you need to update `tact.config.json` correspondingly. For more information , see [Tact Documentation](https://docs.tact-lang.org/language/guides/config)
-## Testing
+## YAML Script Schema (quick)
+```yaml
+steps:
+  - wait_for:
+      image: ok_button.png
+      timeout: 10        # seconds
+      interval: 0.5      # seconds
+      threshold: 0.9
+      region: [x, y, w, h]  # optional crop
+  - click:
+      image: ok_button.png # or {x: 100, y: 200}
+      threshold: 0.9
+      offset: [dx, dy]
+  - type_text:
+      text: "Hello"
+      interval: 0.03
+  - hotkey:
+      keys: ["ctrl", "s"]
+  - sleep: 1.0
+```
 
-Example of contract tests are in `contract.spec.ts`. For more information about testing, see [Tact Documentation](https://docs.tact-lang.org/language/guides/debug)
+## Tips
+- Use your OS screenshot tool to create clear templates at the same scale as your desktop. Store them in `templates/`.
+- You can disable multi-scale search by setting `scale_min == scale_max == 1.0` in your script-level defaults.
 
-To add new test files to contract you should create `*.spec.ts` files similar to template's one and they would be automatically included in testing.
-
-## Licence
-
-MIT
+## Disclaimer
+Desktop automation can be disruptive. Test carefully on a non-critical workspace first.
